@@ -14,16 +14,18 @@ public class MainFrame extends JFrame implements ActionListener{
   private JPanel basePanel;
   private JPanel mainPanel;
   private JScrollPane scrollPane;
-  private ArrayList<JPanel> listRecords;
-  private ArrayList<JButton> listButton;
-  private JButton buttonPlus;
+  private ArrayList<RecordPanel> listRecords;
+  private ArrayList<PlusButton> listButton;
+  private PlusButton buttonPlus;
   private JButton buttonDelete;
+  private int maxId;
 
   public MainFrame(String title){
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     setTitle(title);
     setPreferredSize(new Dimension(800,600));
 
+    maxId = 10;
     listRecords = new ArrayList<>();
     listButton = new ArrayList<>();
 
@@ -33,30 +35,28 @@ public class MainFrame extends JFrame implements ActionListener{
     mainPanel.setLayout(new GridLayout(10,1));
 
     scrollPane = new JScrollPane(mainPanel);
-    for(int i = 0; i < 10;i++){
-      addRecordPanel();
+    for(int i = 0; i < maxId;i++){
+      addRecordPanel(i);
     }
     
-    for(JPanel jp: listRecords){
-      mainPanel.add(jp);
+    for(RecordPanel rp: listRecords){
+      mainPanel.add(rp);
     }
     getContentPane().add(scrollPane,BorderLayout.CENTER);
     pack();
     setVisible(true);
   }
   
-  private void addRecordPanel(){
-    JPanel jp = new JPanel();
-    RecordPanel rp = new RecordPanel();
-    jp.add(rp);
-    addPlusButton(jp);
-    addDeleteButton(jp);
-    listRecords.add(jp);
+  private void addRecordPanel(int i){
+    RecordPanel rp = new RecordPanel(i);
+    addPlusButton(i, rp);
+    listRecords.add(rp);
   }
   
-  public void addPlusButton(JPanel jp){
-    buttonPlus = new JButton("+");
+  public void addPlusButton(int id,JPanel jp){
+    buttonPlus = new PlusButton(id,"+");
     buttonPlus.addActionListener(this);
+    listButton.add(buttonPlus);
     jp.add(buttonPlus);
   }
 
@@ -67,21 +67,25 @@ public class MainFrame extends JFrame implements ActionListener{
   }
   @Override
   public void actionPerformed(ActionEvent e) {
+    maxId++;
     mainPanel.removeAll();
-    Object obj = e.getSource();
+    int myId = e.getID();
     int cnt = 0;
-    listRecords.add(cnt,new RecordPanel());
-    listButton.add(cnt,new JButton());
-    for(JButton j: listButton){
-      if(j == obj){
-      }
-      cnt++;
-    }
-    System.out.println(listRecords.size());
+    listRecords.add(cnt,new RecordPanel(maxId));
+    PlusButton pb = new PlusButton(maxId,"++");
+    pb.addActionListener(this);
+    listButton.add(cnt,pb);
+    System.out.println(listRecords.size() + " " + listButton.size());
     mainPanel.setLayout(new GridLayout(listRecords.size(),1));
-    listButton = new ArrayList<>();
-    for(JPanel jp: listRecords){
-      mainPanel.add(jp);
+    for(RecordPanel rp: listRecords){
+      mainPanel.add(rp);
+      for(PlusButton pb:listButton){
+        System.out.println(rp.getId() + " " + pb.getId());
+        if(rp.getId() == pb.getId()){
+          rp.add(pb);
+          mainPanel.add(rp);
+        }
+      }
       // addPlusButton(jp);
       // addDeleteButton(jp);
     }

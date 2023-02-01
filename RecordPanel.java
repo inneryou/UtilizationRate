@@ -19,6 +19,7 @@ public class RecordPanel extends JPanel implements ItemListener{
   private JTextField textFieldFrom;
   private JTextField textFieldTo;
   private JTextField textFieldBetween;
+  private int id;
 
   private String[] aryLarge = {"業務A","業務B","業務C","業務D","業務E"};
   private String[][] aryMiddle = {
@@ -28,7 +29,8 @@ public class RecordPanel extends JPanel implements ItemListener{
     {"業務D-1","業務D-2","業務D-3","業務D-4"},
     {"業務E-1","業務E-2","業務E-3","業務E-4"}
   };
-  public RecordPanel(){
+  public RecordPanel(int id){
+    this.id = id;
     modelLarge = new DefaultComboBoxModel<>(aryLarge);
     createAryModelMiddle();
     setLayout(new GridLayout(1,6));
@@ -53,6 +55,7 @@ public class RecordPanel extends JPanel implements ItemListener{
       aryModelMiddle.add(md);
     }
   }
+  
   @Override
   public void itemStateChanged(ItemEvent e) {
     if(e.getStateChange() == ItemEvent.SELECTED){
@@ -79,5 +82,9 @@ public class RecordPanel extends JPanel implements ItemListener{
           break;
       } 
     }
+  }
+
+  public int getId(){
+    return this.id;
   }
 }
