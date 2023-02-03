@@ -16,8 +16,10 @@ public class MainFrame extends JFrame implements ActionListener{
   private JScrollPane scrollPane;
   private ArrayList<RecordPanel> listRecords;
   private ArrayList<PlusButton> listButton;
+  private ArrayList<DeleteButton> listDeleteButton;
   private PlusButton buttonPlus;
-  private JButton buttonDelete;
+  private DeleteButton buttonDelete;
+  private JButton buttonClose;
   private int maxId;
 
   public MainFrame(String title){
@@ -28,11 +30,15 @@ public class MainFrame extends JFrame implements ActionListener{
     maxId = 10;
     listRecords = new ArrayList<>();
     listButton = new ArrayList<>();
+    listDeleteButton = new ArrayList<>();
 
     basePanel = new JPanel();
     basePanel.setLayout(new BorderLayout());
     mainPanel = new JPanel();
     mainPanel.setLayout(new GridLayout(10,1));
+
+    buttonClose = new JButton("Close");
+    buttonClose.addActionListener(this);
 
     scrollPane = new JScrollPane(mainPanel);
     for(int i = 0; i < maxId;i++){
@@ -42,7 +48,10 @@ public class MainFrame extends JFrame implements ActionListener{
     for(RecordPanel rp: listRecords){
       mainPanel.add(rp);
     }
+
+    getContentPane().add(buttonClose,BorderLayout.NORTH);
     getContentPane().add(scrollPane,BorderLayout.CENTER);
+    
     pack();
     setVisible(true);
   }
@@ -50,6 +59,7 @@ public class MainFrame extends JFrame implements ActionListener{
   private void addRecordPanel(int i){
     RecordPanel rp = new RecordPanel(i);
     addPlusButton(i, rp);
+    addDeleteButton(i, rp);
     listRecords.add(rp);
   }
   
@@ -60,13 +70,19 @@ public class MainFrame extends JFrame implements ActionListener{
     jp.add(buttonPlus);
   }
 
-  public void addDeleteButton(JPanel jp){
-    buttonDelete = new JButton("-");
+  public void addDeleteButton(int id,JPanel jp){
+    buttonDelete = new DeleteButton(id,"-");
     buttonDelete.addActionListener(this);
+    listDeleteButton.add(buttonDelete);
     jp.add(buttonDelete);
   }
+
   @Override
   public void actionPerformed(ActionEvent e) {
+    Object obj = e.getSource();
+    if(obj == buttonClose){
+      System.exit(0);
+    }
     maxId++;
     mainPanel.removeAll();
     int myId = e.getID();
@@ -79,10 +95,10 @@ public class MainFrame extends JFrame implements ActionListener{
     mainPanel.setLayout(new GridLayout(listRecords.size(),1));
     for(RecordPanel rp: listRecords){
       mainPanel.add(rp);
-      for(PlusButton pb:listButton){
-        System.out.println(rp.getId() + " " + pb.getId());
-        if(rp.getId() == pb.getId()){
-          rp.add(pb);
+      for(PlusButton pbb:listButton){
+        System.out.println(rp.getId() + " " + pbb.getId());
+        if(rp.getId() == pbb.getId()){
+          rp.add(pbb);
           mainPanel.add(rp);
         }
       }
