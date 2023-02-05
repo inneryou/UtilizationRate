@@ -40,6 +40,8 @@ public class RecordRow extends JPanel implements ItemListener,ActionListener{
     comboBoxMiddle = new JComboBox<>(aryModelMiddle.get(0));
     add(comboBoxMiddle);
     textFieldComments = new JTextField(6);
+    textFieldComments.setBackground(Color.CYAN);
+    textFieldComments.addActionListener(this);
     add(textFieldComments);
     textFieldFrom = new JTextField(6);
     add(textFieldFrom);
@@ -47,8 +49,6 @@ public class RecordRow extends JPanel implements ItemListener,ActionListener{
     add(textFieldTo);
     textFieldBetween = new JTextField(6);
     add(textFieldBetween);
-    // addPlusButton();
-    // addDeleteButton();
   }
   
   private void createAryModelMiddle(){
@@ -58,17 +58,17 @@ public class RecordRow extends JPanel implements ItemListener,ActionListener{
     }
   }
 
-  private void deleteRow(int num){
-
-  }
   @Override
   public void actionPerformed(ActionEvent ae){
     Object obj = ae.getSource();
-    if(obj instanceof PlusButton){
-      System.out.println(((PlusButton) obj).getId());
-    }
-    if(obj instanceof DeleteButton){
-      System.out.println(((DeleteButton) obj).getId());
+    System.out.println(obj);
+    if(obj == textFieldComments){
+      System.out.println("T");
+      if(((JTextField)obj).getText().indexOf(":")>0){
+        String[] str = ((JTextField)obj).getText().split(":");
+        Float val = Float.parseFloat(str[0]) + (Float.parseFloat(str[1]))/60;
+        textFieldFrom.setText(Float.toString((Math.round(val*100.0f)/100.0f)));
+      }
     }
   }
   @Override
